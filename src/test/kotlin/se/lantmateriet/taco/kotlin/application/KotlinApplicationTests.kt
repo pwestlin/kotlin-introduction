@@ -1,4 +1,4 @@
-package se.lantmateriet.taco.kotlin
+package se.lantmateriet.taco.kotlin.application
 
 import org.junit.Test
 import org.junit.runner.RunWith
