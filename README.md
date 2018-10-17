@@ -1,2 +1,2 @@
-# kotlin-introduction
-# kotlin-introduction
+# Kotlin introduction with code samples
+
