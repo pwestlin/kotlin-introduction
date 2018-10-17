@@ -1,4 +1,4 @@
-package se.lantmateriet.taco.kotlin
+package se.lantmateriet.taco.kotlin.basics
 
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
@@ -12,6 +12,7 @@ import java.time.LocalDate
 import java.time.chrono.ChronoLocalDate
 import kotlin.system.measureTimeMillis
 
+@Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused")
 class BasicsKtTest {
 
     @Test
@@ -113,12 +114,12 @@ class BasicsKtTest {
         }
 
         // progressions
-        for (x in 1..10 step 2) {
-            print("$x ")
+        for (num in 1..10 step 2) {
+            print("$num ")
         }
         println()
-        for (x in 9 downTo 0 step 3) {
-            print("$x ")
+        for (num in 9 downTo 0 step 3) {
+            print("$num ")
         }
     }
 
@@ -341,6 +342,7 @@ class BasicsKtTest {
         assertThat(compute(4, 2, subtract)).isEqualTo(2)
         assertThat(compute(4, 2, multiply)).isEqualTo(8)
         assertThat(compute(4, 2, { a: Int, b: Int -> a / b })).isEqualTo(2)
+        assertThat(compute(4, 2) { a: Int, b: Int -> a / b }).isEqualTo(2)
     }
 
     @Test
