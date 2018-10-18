@@ -245,6 +245,18 @@ class BasicsKtTest {
     }
 
     @Test
+    fun inheritance() {
+        open class Vehicle(color: String)
+        class Truck(color: String, noWheels: Int) : Vehicle(color)
+
+        val vehicle = Vehicle("green")
+        val truck = Truck("white", 6)
+
+        // Hä gånt nå för Truck är final
+        //class FoodTruck(color: String, noWheels: Int, hungry: Boolean) : Truck(color, noWheels)
+    }
+
+    @Test
     fun classesAndObjects_dataClasses() {
         data class Person(val name: String, val age: Int)
 
