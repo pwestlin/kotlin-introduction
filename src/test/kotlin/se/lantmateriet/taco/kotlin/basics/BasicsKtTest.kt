@@ -269,7 +269,6 @@ class BasicsKtTest {
             println(File("/d2362/sdhdhs/xbryud/sdfghsdg.txt").readBytes())
         } catch (e: IOException) {
             println("Do something")
-            e.printStackTrace()
         }
     }
 
@@ -621,18 +620,19 @@ class BasicsKtTest {
         foo(72.3)
     }
 
-    data class Car(val brand: String, val model: String, val year: String)
 
     @Test
-    fun equality() {
+    fun `equality Checks`() {
+        data class Car(val brand: String, val model: String, val year: String)
+
         val car = Car("Volvo", "PV", "1970")
 
         val equalCar = Car("Volvo", "PV", "1970")
         assertThat(equalCar == car).isTrue()
+        assertThat(equalCar === car).isFalse()
 
         val notEqualCar = Car("Volvo", "Amazon", "1966")
         assertThat(notEqualCar == car).isFalse()
-
         assertThat(notEqualCar === car).isFalse()
 
         val sameCar = car
@@ -641,10 +641,11 @@ class BasicsKtTest {
     }
 
 
-    data class User(val username: String, val email: String)
 
     @Test
     fun `destructuring declarations`() {
+        data class User(val username: String, val email: String)
+
         val user = User("bosseringholmo", "bosse_man@oldfolkshome.se")
 
         val (username, email) = user
