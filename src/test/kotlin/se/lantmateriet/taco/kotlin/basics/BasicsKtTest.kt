@@ -1,18 +1,21 @@
 package se.lantmateriet.taco.kotlin.basics
 
 import kotlinx.coroutines.experimental.delay
+
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.time.LocalDate
 import java.time.chrono.ChronoLocalDate
+import java.util.*
 import kotlin.system.measureTimeMillis
 
-@Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER")
+@Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall")
 class BasicsKtTest {
 
     @Test
@@ -23,6 +26,7 @@ class BasicsKtTest {
     @Test
     // Funktion med specad returtyp och "body"
     fun functionWithReturnTypeAndBody() {
+        // Japp, man kan ha funktioner inuti en funktion - de kallas local functions
         fun double(int: Int): Int {
             return int * 2
         }
@@ -49,8 +53,10 @@ class BasicsKtTest {
 
     @Test
     fun variables() {
-        // Definiera varibel
+        // Definiera varibel av typen int
         val i: Int = 5
+        // Definiera varibel av typen int mha type inference
+        val ii = 5
 
         // En till Int med automatisk typ Int
         val j = 5
@@ -91,6 +97,66 @@ class BasicsKtTest {
         assertThatThrownBy { nullableString!!.length }
             .isInstanceOf(KotlinNullPointerException::class.java)
             .hasMessage(null)
+    }
+
+    @Test
+    fun nullableCheck() {
+        class Address(val street: String? = null)
+        class Person(val address: Address? = null)
+        class Customer(val id: Long, val person: Person?)
+
+        fun getCustomerStreetAddress(customer: Customer?): String? {
+            // TODO petves: Gör om till safe-calls
+            if (customer != null && customer.person != null && customer.person.address != null && customer.person.address.street != null) {
+                return customer.person.address.street
+            } else {
+                return null
+            }
+
+        }
+
+        assertThat(getCustomerStreetAddress(null)).isNull()
+        assertThat(getCustomerStreetAddress(Customer(1, Person()))).isNull()
+        assertThat(getCustomerStreetAddress(Customer(2, Person(Address())))).isNull()
+        assertThat(getCustomerStreetAddress(Customer(3, Person(Address("Lantmäterigatan"))))).isEqualTo("Lantmäterigatan")
+
+        //return customer?.person?.address?.street
+
+        val files = File("/asfgsdhd/cvhndf/jmfghjern").listFiles()    // listFiles() returnerar null om inte pathen kan hittas
+        assertThat(files).isNull()
+
+        assertThatThrownBy { files.size }
+            .isInstanceOf(NullPointerException::class.java)
+            .hasMessage(null)
+
+        assertThat(files?.size).isNull()
+        println(files?.size)    // Java: if(files != null) {System.out.println(files.size)}
+
+        println(files?.size ?: "empty")     // Java: *puh*
+
+        var value: String? = null
+        value?.let {
+            println("Inte null")    // Denna rad kommer aldrig exekveras då value är null
+        }
+        value = "foo"
+        value?.let {
+            println("Inte null")
+        }
+    }
+
+    @Test
+    fun `OrElse, OrElseThrow`() {
+        fun canReturnNull(string: String?) = string
+
+        // ?: i kotlin är samma som Javas .orElse(...)
+        assertThat(canReturnNull("foo") ?: "null").isEqualTo("foo")
+        assertThat(canReturnNull(null) ?: "null").isEqualTo("null")
+
+        // ...och faktiskt även samma som Javas orElseThrow
+        assertThatThrownBy { canReturnNull(null) ?: throw RuntimeException("Jag ville inte ha null!") }
+            .isInstanceOf(RuntimeException::class.java)
+            .hasMessage("Jag ville inte ha null!")
+
     }
 
     @Test
@@ -138,17 +204,18 @@ class BasicsKtTest {
             else -> println("whatever")
         }
 
-        // Inget anrop till stream()
-        fruits
-            .filter { it.startsWith("a") }
+
+        val fruitsWithA = fruits            // Inget anrop till stream()
+            //.filter { s -> s.startsWith("a") }
+            .filter { it.startsWith("a") }      // "it" är default-namnet för en ensam parameter i strömmar
             .sortedBy { it }
             .map { it.toUpperCase() }
-            .forEach { println(it) }
+        // Inget anrop till .collect(Collectors.toList())
+        assertThat(fruitsWithA).containsExactlyInAnyOrder("AVOCADO", "APPLE")
     }
 
     @Test
     fun defaultValuesForFunctionParams() {
-        // Japp, man kan ha funktioner inuti en funktion
         fun multiply(a: Int, b: Int = 2) = a * b
 
         assertThat(multiply(5, 5)).isEqualTo(25)
@@ -158,27 +225,23 @@ class BasicsKtTest {
     }
 
     @Test
-    fun nullableCheck() {
-        val files = File("/asfgsdhd/cvhndf/jmfghjern").listFiles()    // listFiles() returnerar null om inte pathen kan hittas
-        assertThat(files).isNull()
+    fun functionDefaultAndNamedArgs() {
+        fun reformat(string: String, reverse: Boolean = false, upperCase: Boolean = false): String {
+            var formatted = string
+            if (reverse) {
+                formatted = formatted.reversed()
+            }
+            if (upperCase) {
+                formatted = formatted.toUpperCase()
+            }
 
-        assertThatThrownBy { files.size }
-            .isInstanceOf(NullPointerException::class.java)
-            .hasMessage(null)
-
-        assertThat(files?.size).isNull()
-        println(files?.size)    // Java: if(files != null) {System.out.println(files.size)}
-
-        println(files?.size ?: "empty")     // Java: *puh*
-
-        var value: String? = null
-        value?.let {
-            println("Inte null")
+            return formatted
         }
-        value = "foo"
-        value?.let {
-            println("Inte null")
-        }
+
+        assertThat(reformat("Elsa i Paris")).isEqualTo("Elsa i Paris")
+        assertThat(reformat("Elsa i Paris", true)).isEqualTo("siraP i aslE")
+        assertThat(reformat("Elsa i Paris", true, true)).isEqualTo("SIRAP I ASLE")
+        assertThat(reformat("Elsa i Paris", upperCase = true)).isEqualTo("ELSA I PARIS")
     }
 
     @Test
@@ -211,7 +274,36 @@ class BasicsKtTest {
     }
 
     @Test
-    fun callingMultipleMethodsOnAnObjectInstance() {
+    fun `TODO`() {
+        assertThatThrownBy { TODO("Implementera mig då!") }
+            .isInstanceOf(NotImplementedError::class.java)
+            .hasMessage("An operation is not implemented: Implementera mig då!")
+    }
+
+    @Test
+    fun `try with resources`() {
+        /*
+            // Java 1.7 and above
+            Properties prop = new Properties();
+            try (FileInputStream fis = new FileInputStream("config.properties")) {
+                prop.load(fis);
+            }
+            // fis automatically closed
+         */
+
+        val prop = Properties()
+        try {
+            FileInputStream("config.properties").use {
+                prop.load(it)
+            }
+            // FileInputStream automatically closed
+        } catch (e: Throwable) {
+            // Do nothing
+        }
+    }
+
+    @Test
+    fun `calling multiple methods on an object instance`() {
         class Turtle {
             fun penDown() = println("Down")
             fun penUp() = println("Up")
@@ -233,7 +325,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun classesAndObjects() {
+    fun `classes and objects`() {
         // Japp, man kan skapa klasser inuti en funktion
         class Car(val brand: String, var name: String)
 
@@ -251,18 +343,34 @@ class BasicsKtTest {
 
     @Test
     fun inheritance() {
-        open class Vehicle(color: String)
-        class Truck(color: String, noWheels: Int) : Vehicle(color)
+        // Klasser är final by default som man måste märka dem med "open" vid arv
+        open class Animal(val noLegs: Int) {
+            // Metoder är också final by default
+            open fun sound() = "Schhh"
+        }
 
-        val vehicle = Vehicle("green")
-        val truck = Truck("white", 6)
+        class Fish : Animal(0) {
+            override fun sound() = "Blubb"
+        }
 
-        // Hä gånt nå för Truck är final
-        //class FoodTruck(color: String, noWheels: Int, hungry: Boolean) : Truck(color, noWheels)
+        class Fox() : Animal(4) {
+            override fun sound() = "What does twe fox say?"
+        }
+
+        val threeLeggedAnimal = Animal(3)
+        assertThat(threeLeggedAnimal.noLegs).isEqualTo(3)
+        assertThat(threeLeggedAnimal.sound()).isEqualTo("Schhh")
+
+        val fox = Fox()
+        assertThat(fox.noLegs).isEqualTo(4)
+        assertThat(fox.sound()).isEqualTo("What does twe fox say?")
+
+
+        //class Salmon : Fish       // Hä gånt nå för Fish är final (by default)
     }
 
     @Test
-    fun classesAndObjects_dataClasses() {
+    fun `classes and objects - dataClasses`() {
         data class Person(val name: String, val age: Int)
 
         val person = Person("Peter", 46)
@@ -273,11 +381,47 @@ class BasicsKtTest {
         assertThat(person.age).isEqualTo(46)
     }
 
+
+
+    class Stack<E>(vararg items: E) {
+        private val elements = items.toMutableList()
+
+        fun push(item: E) {elements.add(item)}
+        fun pop() = elements.removeAt(elements.size - 1)
+        fun peek(): E = elements.last()
+    }
+
+    @Test
+    fun generics() {
+        val stack = Stack("foo", 4)
+        assertThat(stack.peek()).isEqualTo(4)
+        stack.push(5.67)
+        assertThat(stack.peek()).isEqualTo(5.67)
+        assertThat(stack.pop()).isEqualTo(5.67)
+        assertThat(stack.pop()).isEqualTo(4)
+        assertThat(stack.peek()).isEqualTo("foo")
+
+        val intStack = Stack(1, 6, 3)
+        assertThat(intStack.peek()).isEqualTo(3)
+        //intStack.push("foo")      // Går inte eftersom stacken automatiskt typats till int
+    }
+
+    @Test
+    fun `generic functions`() {
+        fun <E> mutableStackOf(vararg elements: E) = Stack(*elements)
+
+        val genericStack = mutableStackOf("a", 1)
+        genericStack.push(12.32)
+
+        val intStack = mutableStackOf(1, 2 ,3)    // Går inte för "a" och 2.34 är inte Int
+        // intStack.push("foo")      // Går inte för typen har automatiskt blivit Int
+        // val intStack = mutableStackOf<Int>("a", 1, 2.34)    // Går inte för "a" och 2.34 är inte Int
+    }
+
+
     object Resource {
         const val name = "I am a singleton"
         const val value = 42
-
-
     }
 
     @Test
@@ -286,6 +430,21 @@ class BasicsKtTest {
         assertThat(Resource.value).isEqualTo(42)
     }
 
+    @Test
+    fun `infix member function`() {
+        class Person(name: String) {
+            val likedStruff = mutableListOf<String>()
+            infix fun likes(thing: String) {
+                likedStruff.add(thing)
+            }
+        }
+
+        val peter = Person("Peter")
+        peter likes "Kotlin"
+        peter likes "Karting"
+
+        assertThat(peter.likedStruff).containsExactlyInAnyOrder("Karting", "Kotlin")
+    }
 
 
     /*
@@ -303,14 +462,34 @@ class BasicsKtTest {
     }
 
     @Test
-    fun companionObjects() {
+    fun `companion objects`() {
         val myClass = Person.create("Pelle", "Plutt")
 
         assertThat(myClass.name).isEqualTo("Pelle Plutt")
     }
 
     @Test
-    fun extensionFunctions() {
+    fun let() {
+        class Foo(arg: String)
+
+        Foo("Bar").let { foo ->
+            foo.toString()
+            foo.equals(Foo("Bra"))
+        }
+    }
+
+    @Test
+    fun apply() {
+        val dir = System.getProperty("java.io.tmpdir") + "/bulle"
+        val createdDir = File(dir).apply { mkdirs() }
+        assertThat(File(System.getProperty("java.io.tmpdir") + "/bulle")).exists()
+
+        val i = 7.apply { minus(3) }
+        assertThat(i).isEqualTo(7)      // Varför 7 och inte 4?
+    }
+
+    @Test
+    fun `extension functions`() {
         // Här börjar det bli fränt på riktigt!
 
         val string = "foo"
@@ -322,6 +501,33 @@ class BasicsKtTest {
 
         // Ni vet den där klassen StringUtils eller DateUtils som man ALLTID har i VARJE projekt?
         // ...den behövs inte längre för man kan använda extension functions istället! :)
+    }
+
+    @Test
+    fun `infix extension function`() {
+        infix fun Int.add(i: Int) = this + i
+
+        assertThat(7.add(3)).isEqualTo(10)
+        assertThat(7 add 3).isEqualTo(10)
+    }
+
+    @Test
+    fun `operator functions`() {
+        operator fun Int.times(str: String) = str.repeat(this)
+        assertThat(2 * "Bye ").isEqualTo("Bye Bye ")
+
+        operator fun String.get(range: IntRange) = substring(range)  // 3
+        val str = "Always forgive your enemies; nothing annoys them so much."
+        assertThat(str[0..13]).isEqualTo("Always forgive")
+    }
+
+    @Test
+    fun varargs() {
+        fun concat(vararg strings: String): String {
+            return strings.joinToString(" ")
+        }
+
+        assertThat(concat("Varargs", "can", "be", "useful")).isEqualTo("Varargs can be useful")
     }
 
     enum class Motorcycle(val brand: String) {
@@ -336,27 +542,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun functionDefaultAndNamedArgs() {
-        fun reformat(string: String, reverse: Boolean = false, upperCase: Boolean = false): String {
-            var formatted = string
-            if (reverse) {
-                formatted = formatted.reversed()
-            }
-            if (upperCase) {
-                formatted = formatted.toUpperCase()
-            }
-
-            return formatted
-        }
-
-        assertThat(reformat("Elsa i Paris")).isEqualTo("Elsa i Paris")
-        assertThat(reformat("Elsa i Paris", true)).isEqualTo("siraP i aslE")
-        assertThat(reformat("Elsa i Paris", true, true)).isEqualTo("SIRAP I ASLE")
-        assertThat(reformat("Elsa i Paris", upperCase = true)).isEqualTo("ELSA I PARIS")
-    }
-
-    @Test
-    fun lambda_compute() {
+    fun `lambda compute`() {
         val add = { a: Int, b: Int -> a + b }
         val subtract = { a: Int, b: Int -> a - b }
         val multiply = { a: Int, b: Int -> a * b }
@@ -373,7 +559,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun collections2() {
+    fun `collections - mutable and immutable`() {
         val numbers = listOf(1, 2, 3)
         assertThat(numbers).containsExactly(1, 2, 3)
         //numbers.add(4)    // add finns inte som funktion på en immutable list
@@ -385,7 +571,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun typeChecks() {
+    fun `type checks`() {
         fun printLength(obj: Any) {
             if (obj is String) {
                 println(obj.length)
@@ -403,7 +589,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun smartCasts() {
+    fun `smart casts`() {
         //val date: ChronoLocalDate? = LocalDate.now()
         val date: ChronoLocalDate? = null
         if (date != null) {
@@ -458,11 +644,11 @@ class BasicsKtTest {
     data class User(val username: String, val email: String)
 
     @Test
-    fun destructuringDeclarations() {
-        val user = User("bosseringholm", "bosse_man@oldfolkshome.se")
+    fun `destructuring declarations`() {
+        val user = User("bosseringholmo", "bosse_man@oldfolkshome.se")
 
         val (username, email) = user
-        assertThat(username).isEqualTo("bosseringholm")
+        assertThat(username).isEqualTo("bosseringholmo")
         assertThat(email).startsWith("bosse_man")
     }
 
@@ -482,21 +668,4 @@ class BasicsKtTest {
         println("\ntime = $time ms")
     }
 
-
-    inline fun <T> doStuffSlowly(block: () -> T): T {
-        val start = System.currentTimeMillis()
-        Thread.sleep(100)
-        val retVal = block()
-        Thread.sleep(100)
-        println(System.currentTimeMillis() - start)
-        return retVal
-    }
-
-
-    @Test
-    fun inlineStuff() {
-        val multiply = { a: Int, b: Int -> a * b }
-        val retVal = doStuffSlowly { multiply(7, 7) }
-        println("retVal = ${retVal}")
-    }
 }
