@@ -1,7 +1,8 @@
+@file:Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall", "LiftReturnOrAssignment", "ReplaceGetOrSet")
+
 package se.lantmateriet.taco.kotlin.basics
 
 import kotlinx.coroutines.experimental.delay
-
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,11 @@ import java.time.chrono.ChronoLocalDate
 import java.util.*
 import kotlin.system.measureTimeMillis
 
-@Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall")
+sealed class OffspringOfPeters(val name: String, val age: Int)
+class Adam : OffspringOfPeters("Adam", 14)
+class Felix : OffspringOfPeters("Felix", 11)
+
+
 class BasicsKtTest {
 
     @Test
@@ -78,11 +83,13 @@ class BasicsKtTest {
 
 
     @Test
-    fun conditionalExpressions() {
-        // Conditional statements returnerar värden!
-        val strFromCond = if (2 > 1) 2 else 1
+    fun `conditional expressions`() {
+        // Följande finns inte i Kotlin:
+        // condition ? then : else
+        // ...men conditional statements returnerar värden!
+        val retFromCond = if (2 > 1) 2 else 1
 
-        assertThat(strFromCond).isEqualTo(2)
+        assertThat(retFromCond).isEqualTo(2)
     }
 
     @Test
@@ -198,12 +205,15 @@ class BasicsKtTest {
     fun collections() {
         val fruits = listOf("banana", "avocado", "apple", "kiwifruit", "orange")
 
+        // access
+        assertThat(fruits[1]).isEqualTo("avocado")
+        assertThat(fruits[1] == fruits.get(1)).isTrue()
+
         when {
             "orange" in fruits -> println("juicy")
             "apple" in fruits -> println("apple is fine too")
             else -> println("whatever")
         }
-
 
         val fruitsWithA = fruits            // Inget anrop till stream()
             //.filter { s -> s.startsWith("a") }
@@ -212,6 +222,20 @@ class BasicsKtTest {
             .map { it.toUpperCase() }
         // Inget anrop till .collect(Collectors.toList())
         assertThat(fruitsWithA).containsExactlyInAnyOrder("AVOCADO", "APPLE")
+
+        // find/findLast
+        assertThat(fruits.find { it.endsWith("e") }).isEqualTo("apple")
+        assertThat(fruits.findLast { it.endsWith("e") }).isEqualTo("orange")
+
+        //first/last (ni vet där man i Java skriver fruits.get(0) och fruits.get(fruits.size() -1)
+        assertThat(fruits.first()).isEqualTo("banana")
+        assertThat(fruits.last()).isEqualTo("orange")
+
+        // count
+        assertThat(fruits.count()).isEqualTo(5)
+        assertThat(fruits.count { it.contains("a") }).isEqualTo(4)
+
+        TODO("firstOrNull, lastOrNull, partition, associateBy, groupBy, zip, flatMap, min, max, getOrElse")
     }
 
     @Test
@@ -302,7 +326,20 @@ class BasicsKtTest {
     }
 
     @Test
-    fun `calling multiple methods on an object instance`() {
+    fun with() {
+        class Turtle(val name: String, val age: Int, val speed: String)
+
+        val myTurtle = Turtle("Speedy", 93, "Slower than a snail")
+        println("Name:${myTurtle.name}\nAge:${myTurtle.age}\nSpeed: ${myTurtle.speed}")
+
+        // with "väljer" en objektinstans jag vill jobba med i kontextet
+        with(myTurtle) {
+            println("Name:$name\nAge:$age\nSpeed: $speed")
+        }
+    }
+
+    @Test
+    fun `with - calling multiple methods on an object instance`() {
         class Turtle {
             fun penDown() = println("Down")
             fun penUp() = println("Up")
@@ -352,7 +389,7 @@ class BasicsKtTest {
             override fun sound() = "Blubb"
         }
 
-        class Fox() : Animal(4) {
+        class Fox : Animal(4) {
             override fun sound() = "What does twe fox say?"
         }
 
@@ -369,7 +406,7 @@ class BasicsKtTest {
     }
 
     @Test
-    fun `classes and objects - dataClasses`() {
+    fun `classes and objects - data classes`() {
         data class Person(val name: String, val age: Int)
 
         val person = Person("Peter", 46)
@@ -378,14 +415,37 @@ class BasicsKtTest {
 
         assertThat(person.name).isEqualTo("Peter")
         assertThat(person.age).isEqualTo(46)
+
+        val person2 = person.copy()
+        // equals (and hashCode) är automatgenererade
+        assertThat(person2 == person).isTrue()
+        assertThat(person2 === person).isFalse()
+
+        val person3 = person2.copy(age = 79)
+        // equals (and hashCode) är automatgenererade
+        assertThat(person3.age).isEqualTo(79)
+        assertThat(person3 == person2).isFalse()
+        assertThat(person3 === person2).isFalse()
     }
 
 
+    @Test
+    fun `sealed classes`() {
+        fun isTonaring(offspring: OffspringOfPeters): Boolean {
+            return when (offspring) {
+                is Adam -> true
+                is Felix -> false
+            }
+        }
+    }
 
     class Stack<E>(vararg items: E) {
         private val elements = items.toMutableList()
 
-        fun push(item: E) {elements.add(item)}
+        fun push(item: E) {
+            elements.add(item)
+        }
+
         fun pop() = elements.removeAt(elements.size - 1)
         fun peek(): E = elements.last()
     }
@@ -412,7 +472,7 @@ class BasicsKtTest {
         val genericStack = mutableStackOf("a", 1)
         genericStack.push(12.32)
 
-        val intStack = mutableStackOf(1, 2 ,3)    // Går inte för "a" och 2.34 är inte Int
+        val intStack = mutableStackOf(1, 2, 3)    // Går inte för "a" och 2.34 är inte Int
         // intStack.push("foo")      // Går inte för typen har automatiskt blivit Int
         // val intStack = mutableStackOf<Int>("a", 1, 2.34)    // Går inte för "a" och 2.34 är inte Int
     }
@@ -471,10 +531,11 @@ class BasicsKtTest {
     fun let() {
         class Foo(arg: String)
 
-        Foo("Bar").let { foo ->
+        val let = Foo("Bar").let { foo ->
             foo.toString()
-            foo.equals(Foo("Bra"))
+            foo == Foo("Bra")
         }
+        assertThat(let).isFalse()
     }
 
     @Test
@@ -638,8 +699,12 @@ class BasicsKtTest {
         val sameCar = car
         assertThat(sameCar == car).isTrue()
         assertThat(sameCar === car).isTrue()
-    }
 
+
+        val isNull = null
+        val isNotNull = "foo"
+        assertThat(isNull == isNotNull).isFalse()
+    }
 
 
     @Test
