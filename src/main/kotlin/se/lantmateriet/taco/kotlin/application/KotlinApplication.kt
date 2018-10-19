@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
 @RestController
 @RequestMapping("/")
 class GreetingController(val service: GreetingService) {
-    @GetMapping(value = "greet/{name}", produces = arrayOf("application/json"))
+    @GetMapping(value = ["greet/{name}"], produces = ["application/json"])
     fun greet(@PathVariable name: String) = service.greet(name)
 }
 
