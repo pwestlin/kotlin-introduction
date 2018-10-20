@@ -2,7 +2,7 @@
 
 package se.lantmateriet.taco.kotlin.learn_kotlin.lessbasic
 
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.*
 import org.junit.jupiter.api.Test
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
