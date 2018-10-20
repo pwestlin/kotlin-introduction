@@ -52,6 +52,7 @@ dependencies {
 	//implementation("org.jetbrains.kotlinx:kotlin-reflect")
 	implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2'
 	//compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.30.2'
+	implementation('org.springframework.boot:spring-boot-starter-web')
 	
 	testCompile "org.jetbrains.kotlin:kotlin-test-junit5"
 	testCompile("org.assertj:assertj-core:3.11.1")
