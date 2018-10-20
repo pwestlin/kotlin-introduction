@@ -24,6 +24,16 @@ class NullsTest {
     }
 
     @Test
+    fun `nullable Boolean`() {
+        val b: Boolean? = null
+        if (b == true) {
+            println("true")
+        } else {
+            println("false or null")
+        }
+    }
+
+    @Test
     fun nullableCheck() {
         class Address(val street: String? = null)
         class Person(val address: Address? = null)
