@@ -150,4 +150,22 @@ class LessBasicTest {
         }
     }
 
+
+    fun measureTimeInMilliSeconds(block: () -> Unit) : Long {
+        val start = System.currentTimeMillis()
+        block()
+        return System.currentTimeMillis() - start
+    }
+
+    @Test
+    fun `measure time`() {
+        val execTime = measureTimeInMilliSeconds {
+            var counter = 0
+            for (i in 1..5_000_000_000) {
+                counter += 1
+            }
+        }
+
+        println("Exec time: $execTime ms")
+    }
 }
