@@ -2,9 +2,6 @@
 
 package se.lantmateriet.taco.kotlin.learn_kotlin.lessbasic
 
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -12,7 +9,6 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 
 class LessBasicTest {
@@ -112,22 +108,6 @@ class LessBasicTest {
         val (username, email) = user
         assertThat(username).isEqualTo("bosseringholmo")
         assertThat(email).startsWith("bosse_man")
-    }
-
-    @Test
-    fun coroutines() {
-        val time = measureTimeMillis {
-            runBlocking {
-                repeat(100_000) {
-                    // launch a lot of coroutines
-                    launch {
-                        delay(1000L)
-                        print(".")
-                    }
-                }
-            }
-        }
-        println("\ntime = $time ms")
     }
 
     @Test
