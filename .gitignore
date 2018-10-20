@@ -65,3 +65,5 @@ LOG_PATH_IS_UNDEFINED/
 # Logs
 logs/
 habanero-tomcat
+
+.attach_*
