@@ -79,4 +79,20 @@ class FunctionsTest {
         assertThat(reformat("Elsa i Paris", upperCase = true)).isEqualTo("ELSA I PARIS")
     }
 
+
+    @Test
+    fun `return two values from a function`() {
+        fun twoValuesReturn(fullname: String): Pair<String, String> {
+            val names = fullname.split(" ")
+            return Pair(names[0], names[1])
+        }
+
+        val names = twoValuesReturn("Jürgen DiLeva")
+        assertThat(names.first).isEqualTo("Jürgen")
+        assertThat(names.second).isEqualTo("DiLeva")
+
+        val (first, last) = twoValuesReturn("Elvis Costello")
+        assertThat(first).isEqualTo("Elvis")
+        assertThat(last).isEqualTo("Costello")
+    }
 }
