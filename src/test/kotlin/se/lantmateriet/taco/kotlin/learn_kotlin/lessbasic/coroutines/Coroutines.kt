@@ -1,6 +1,6 @@
 @file:Suppress("EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "PackageName")
 
-package se.lantmateriet.taco.kotlin.learn_kotlin.lessbasic
+package se.lantmateriet.taco.kotlin.learn_kotlin.lessbasic.coroutines
 
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.Test
@@ -69,6 +69,28 @@ class CoroutinesTest {
             }
         }
         println("Exec time: $time ms")
+    }
+
+    @Test
+    fun `foo`() {
+        runBlocking {
+            // this: CoroutineScope
+            launch {
+                // launch new coroutine in the scope of runBlocking
+                delay(1000L)
+                print("World!")
+            }
+            launch {
+                // launch new coroutine in the scope of runBlocking
+                delay(750L)
+                print(", ")
+            }
+            launch {
+                // launch new coroutine in the scope of runBlocking
+                delay(500L)
+                print("Hello")
+            }
+        }
     }
 
     fun service1(): String {
