@@ -1,0 +1,51 @@
+package se.lantmateriet.taco.kotlin.learn_kotlin.lessbasic
+
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
+import kotlin.properties.Delegates
+
+class DelegatedPropertiesTest {
+
+    class House {
+        var color: String by Delegates.observable("unknown") { prop, old, new ->
+            println("The color of the house has changed from $old to $new")
+        }
+        var name: String by Delegates.vetoable("") { prop, old, new ->
+            new != old && new.length > 3
+        }
+        var address: String by Delegates.notNull()
+    }
+
+    @Test
+    fun `change color of house`() {
+        val house = House()
+        assertThat(house.color).isEqualTo("unknown")
+        house.color = "Red"
+        house.color = "Yellow"
+    }
+
+    @Test
+    fun `change name of house`() {
+        val house = House()
+        assertThat(house.name).isEqualTo("")
+        house.name = "Cottage"
+        assertThat(house.name).isEqualTo("Cottage")
+        house.name = "Foo"
+        assertThat(house.name).isEqualTo("Cottage")
+        house.name = "Castle"
+        assertThat(house.name).isEqualTo("Castle")
+    }
+
+    @Test
+    fun `change address of house`() {
+        val house = House()
+
+        Assertions.assertThatThrownBy { house.address }
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessage("Property address should be initialized before get.")
+
+        house.address = "Lantmäterigatan, Gävle"
+        assertThat(house.address).isEqualTo("Lantmäterigatan, Gävle")
+    }
+}
