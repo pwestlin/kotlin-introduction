@@ -79,7 +79,6 @@ class FunctionsTest {
         assertThat(reformat("Elsa i Paris", upperCase = true)).isEqualTo("ELSA I PARIS")
     }
 
-
     @Test
     fun `return two values from a function - Pair`() {
         fun twoValuesReturn(fullname: String): Pair<String, String> {
@@ -109,3 +108,39 @@ class FunctionsTest {
         assertThat(lastname).isEqualTo("Bastic")
     }
 }
+
+
+
+
+
+fun topLevelFunctionUtil(message: String) { println("Message: $message")}
+
+object ObjectUtil {
+    fun log(message: String) {
+        println("Message: $message")
+    }
+}
+
+class UtilTest {
+    @Test
+    fun `top level functions`() {
+        // Japp, man kan också ha lokala klasser i funktioner
+        class ClassUtil {
+            fun log(message: String) {
+                println("Message: $message")
+            }
+        }
+        // Klasser kan inte ha statiska metoder i Kotlin så vi måste först skapa en instans av klassen - blä!
+        ClassUtil().log("Foo")
+
+        // Lite snyggare
+        ObjectUtil.log("Foo")
+
+        // men det vi egentligen vill göra är att bara anropa en hjälpfunktion, eller hur?
+        topLevelFunctionUtil("Foo")
+    }
+
+
+}
+
+
