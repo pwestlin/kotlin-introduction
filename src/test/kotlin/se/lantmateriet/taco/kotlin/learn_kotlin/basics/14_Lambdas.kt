@@ -15,6 +15,9 @@ class LambdasTest {
             assertThat(list.last()).isEqualTo("programming")
 
             assertThat(list.last({ it.length == 6 })).isEqualTo("Kotlin")
+
+            // Om den sista parametern til en funktion är ett lambda
+            // kan det flyttas ut ur paranteserna
             assertThat(list.last { it.length == 6 }).isEqualTo("Kotlin")
         }
 
