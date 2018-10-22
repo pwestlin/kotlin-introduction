@@ -72,10 +72,17 @@ class NullsTest {
         value?.let {
             println("Inte null")    // Denna rad kommer aldrig exekveras då value är null
         }
+
         value = "foo"
         value?.let {
             println("Inte null")
         }
+
+        /* let är alltså samma sak som:
+        if(value != null) {
+            println("Inte null")
+        }
+        */
     }
 
     @Test
