@@ -30,6 +30,7 @@ class SealedClassesTest {
             return when (offspring) {
                 is Adam -> true
                 is Felix -> false
+                else -> throw RuntimeException("Typ $offspring stöds inte")  // Behövs inte - wohoo!
             }
         }
 

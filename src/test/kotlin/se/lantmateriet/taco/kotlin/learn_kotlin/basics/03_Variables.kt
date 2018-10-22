@@ -17,7 +17,7 @@ class VariablesTest {
         val j = 5
 
         val k = 7
-        //k = 8 -> kompileringsfel eftersom k är en val som inte kan ändras
+        //k = 8 -> kompileringsfel eftersom k är en val är read-only och därför inte kan ändras
 
         var l = 8
         l = 9   // Detta går bra eftersom l är en var
