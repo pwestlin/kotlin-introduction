@@ -49,6 +49,18 @@ class LessBasicTest {
         assertThat(peter.likedStruff).containsExactlyInAnyOrder("Karting", "Kotlin")
     }
 
+    @Test
+    fun `infix extension function`() {
+        infix fun Int.add(i: Int) = this + i
+
+        assertThat(7.add(3)).isEqualTo(10)
+        assertThat(7 add 3).isEqualTo(10)
+    }
+
+    // infix verkar bäst för tester
+
+
+
 
     /*
     In Kotlin, unlike Java or C#, classes do not have static methods. In most cases, it's recommended to simply use package-level functions instead.
@@ -79,14 +91,6 @@ class LessBasicTest {
 
         val i = 7.apply { minus(3) }
         assertThat(i).isEqualTo(7)      // Varför 7 och inte 4?
-    }
-
-    @Test
-    fun `infix extension function`() {
-        infix fun Int.add(i: Int) = this + i
-
-        assertThat(7.add(3)).isEqualTo(10)
-        assertThat(7 add 3).isEqualTo(10)
     }
 
     @Test
