@@ -50,7 +50,7 @@ class FunctionsTest {
     }
 
     @Test
-    fun defaultValuesForFunctionParams() {
+    fun `default values for function params`() {
         fun multiply(a: Int, b: Int = 2) = a * b
 
         assertThat(multiply(5, 5)).isEqualTo(25)
@@ -60,7 +60,7 @@ class FunctionsTest {
     }
 
     @Test
-    fun functionDefaultAndNamedArgs() {
+    fun `named parameters`() {
         fun reformat(string: String, reverse: Boolean = false, upperCase: Boolean = false): String {
             var formatted = string
             if (reverse) {

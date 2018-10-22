@@ -23,7 +23,7 @@ class LambdasTest {
             assertThat(list.findLast { it.length == 6 }).isEqualTo("Kotlin")
         }
 
-        // filter, map, first, groupBy osv osv osv osv osv....
+        // filter, map, first, groupBy, let, apply osv osv osv osv osv....
     }
 
     @Test
