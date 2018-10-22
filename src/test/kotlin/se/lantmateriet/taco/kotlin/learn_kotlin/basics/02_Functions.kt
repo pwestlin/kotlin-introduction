@@ -33,10 +33,10 @@ class FunctionsTest {
     @Test
     fun `no return type`() {
         fun voidFunctionOrWhat() {
-            1 + 1
+            println("Miss Piggy loves the green frog")
         }
 
-        // Returtypen void saknas, utan kallas Unit och kan utelämnas vid deklaration.
+        // Returtypen void saknas i Kotlin, den kallas istället Unit och kan utelämnas vid deklaration.
         assertThat(voidFunctionOrWhat()).isInstanceOf(Unit::class.java)
     }
 
@@ -81,7 +81,7 @@ class FunctionsTest {
 
 
     @Test
-    fun `return two values from a function`() {
+    fun `return two values from a function - Pair`() {
         fun twoValuesReturn(fullname: String): Pair<String, String> {
             val names = fullname.split(" ")
             return Pair(names[0], names[1])
@@ -94,5 +94,18 @@ class FunctionsTest {
         val (first, last) = twoValuesReturn("Elvis Costello")
         assertThat(first).isEqualTo("Elvis")
         assertThat(last).isEqualTo("Costello")
+    }
+
+    @Test
+    fun `return three values from a function - Triple`() {
+        fun threeValuesReturn(fullname: String): Triple<String, String, String> {
+            val names = fullname.split(" ")
+            return Triple(names[0], names[1], names[2])
+        }
+
+        val (title, firstname, lastname) = threeValuesReturn("Mr. Boom Bastic")
+        assertThat(title).isEqualTo("Mr.")
+        assertThat(firstname).isEqualTo("Boom")
+        assertThat(lastname).isEqualTo("Bastic")
     }
 }

@@ -7,6 +7,42 @@ import org.junit.jupiter.api.Test
 
 class LambdasTest {
 
+    class LambdasStandardLibrary {
+        private val list = listOf("Hello", "from", "the", "wonderful", "world", "of", "Kotlin", "programming")
+
+        @Test
+        fun `last`() {
+            assertThat(list.last()).isEqualTo("programming")
+
+            assertThat(list.last({ it.length == 6 })).isEqualTo("Kotlin")
+            assertThat(list.last { it.length == 6 }).isEqualTo("Kotlin")
+        }
+
+        @Test
+        fun `findLast`() {
+            assertThat(list.findLast { it.length == 6 }).isEqualTo("Kotlin")
+        }
+
+        // filter, map, first, groupBy osv osv osv osv osv....
+    }
+
+    @Test
+    fun `when does a lambda run?`() {
+        // TODO petves: Bra exempel på att ett lambda körs "sen" :)
+
+        fun division(namnare: Int, taljare: Int): Int {
+            try {
+                return taljare / namnare
+            } catch (e: Throwable) {
+                println("Det gick inte att dela $taljare med $namnare")
+                throw e
+            }
+        }
+
+        division(3, 1)
+        division(3, 0)
+    }
+
     @Test
     fun `lambda compute`() {
         val add = { a: Int, b: Int -> a + b }
