@@ -26,4 +26,7 @@ class ExtensionFunctionsTest {
     // ...den behövs inte längre för man kan använda extension functions istället. :)
 
     // ...men använd dem klokt!
+
+    // Extension functions är också ett sätt att hålla klasser (läs API) väldigt enkla.
+    // Man kan lägga önskade funktioner/operation på en klass i en egen modul för att separera saker.
 }
