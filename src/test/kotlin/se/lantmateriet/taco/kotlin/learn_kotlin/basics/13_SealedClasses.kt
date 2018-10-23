@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall", "LiftReturnOrAssignment", "ReplaceGetOrSet", "NonAsciiCharacters", "PackageName", "ClassName")
+@file:Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall", "LiftReturnOrAssignment", "ReplaceGetOrSet", "NonAsciiCharacters", "PackageName", "ClassName", "CanSealedSubClassBeObject")
 
 package se.lantmateriet.taco.kotlin.learn_kotlin.basics
 
@@ -21,6 +21,10 @@ sealed class OffspringOfPeters(val name: String, val age: Int)
 class Adam : OffspringOfPeters("Adam", 14)
 class Felix : OffspringOfPeters("Felix", 11)
 
+sealed class Car {
+    class Volvo : Car()
+    class Saab : Car()
+}
 
 class SealedClassesTest {
 
@@ -30,7 +34,8 @@ class SealedClassesTest {
             return when (offspring) {
                 is Adam -> true
                 is Felix -> false
-                else -> throw RuntimeException("Typ $offspring stöds inte")  // Behövs inte - wohoo!
+                // Behövs inte - wohoo!
+                //else -> throw RuntimeException("Typ $offspring stöds inte")
             }
         }
 
@@ -38,4 +43,19 @@ class SealedClassesTest {
         assertThat(isTonaring(Adam())).isTrue()
     }
 
+    @Test
+    fun `sealed classes - cars`() {
+
+        fun gettingUpdates(car: Car) = when (car) {
+            is Car.Volvo -> true
+            is Car.Saab -> false
+        }
+
+        assertThat(gettingUpdates(Car.Volvo())).isTrue()
+        assertThat(gettingUpdates(Car.Saab())).isFalse()
+
+    }
+
 }
+
+

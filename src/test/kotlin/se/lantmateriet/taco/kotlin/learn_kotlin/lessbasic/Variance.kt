@@ -21,4 +21,18 @@ class VarianceTest {
 
         elements = strings  // Detta funkar eftersom som elements är immutable, dvs jag kan inte uppdatera listan
     }
+
+    @Test
+    fun `in`() {
+        class Taker<in T> {
+            fun takes(t: T) {}
+        }
+    }
+
+    @Test
+    fun `out`() {
+        class Giver<out T> {
+            //fun gives(): T {}
+        }
+    }
 }
