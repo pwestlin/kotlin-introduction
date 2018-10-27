@@ -2,9 +2,14 @@
 
 package se.lantmateriet.taco.kotlin.learn_kotlin.basics
 
-// Från och med Kotlin 1.3 kan main deklareras utan parametrar
+// main
 fun main(args: Array<String>) {
     println("Hello, Wisconsin!")
+}
+
+// Från och med Kotlin 1.3 kan main deklareras utan parametrar
+fun main() {
+    println("Pirkko Määttä!")
 }
 
 fun thisIsATopLevelFunction(i: Int): Int {

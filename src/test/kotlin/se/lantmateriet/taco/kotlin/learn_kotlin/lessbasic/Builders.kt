@@ -8,7 +8,8 @@ import kotlin.properties.Delegates
 
 abstract class Utbytesobjekt(
     val objektidentitet: String,
-    val objektversion: Int)
+    val objektversion: Int = 1
+)
 
 class Fastighet(
     objektidentitet: String,

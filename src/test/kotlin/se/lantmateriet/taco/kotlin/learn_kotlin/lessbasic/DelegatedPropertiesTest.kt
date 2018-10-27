@@ -10,10 +10,10 @@ import kotlin.properties.Delegates
 class DelegatedPropertiesTest {
 
     class House {
-        var color: String by Delegates.observable("unknown") { prop, old, new ->
+        var color: String by Delegates.observable("unknown") { _, old, new ->
             println("The color of the house has changed from $old to $new")
         }
-        var name: String by Delegates.vetoable("") { prop, old, new ->
+        var name: String by Delegates.vetoable("") { _, old, new ->
             new != old && new.length > 3
         }
         var address: String by Delegates.notNull()
