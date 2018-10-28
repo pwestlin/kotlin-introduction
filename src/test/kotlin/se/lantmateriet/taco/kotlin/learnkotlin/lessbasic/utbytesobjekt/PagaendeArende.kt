@@ -2,12 +2,12 @@ package se.lantmateriet.taco.kotlin.learnkotlin.lessbasic.utbytesobjekt
 
 import java.time.ZonedDateTime
 
-class Gemensamhetsanlaggning(
+class PagaendeArende(
     objektidentitet: String,
     objektversion: Int = 1,
     versionGiltigFran: ZonedDateTime? = null,
     versionGiltigTill: ZonedDateTime? = null,
-    val status: String) : Utbytesobjekt<Gemensamhetsanlaggning>(
+    val arendeidentitet: String) : Utbytesobjekt<Gemensamhetsanlaggning>(
     utbytesobjekttyp = Utbytesobjekttyp.GEMENSAMHETSANLAGGNING,
     objektidentitet = objektidentitet,
     objektversion = objektversion,

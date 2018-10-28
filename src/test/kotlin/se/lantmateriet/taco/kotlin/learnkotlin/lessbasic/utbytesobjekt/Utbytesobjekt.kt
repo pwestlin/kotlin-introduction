@@ -16,6 +16,9 @@ Fastighet implementeras med en intern builder.
 Samfallighet implementeras med en test-builder med en exempel-metod som companion object.
 
 Gemensamhetsanlaggning implementeras med en test-builder med en exempel-metod som separat klass.
+
+PagaendeArende implementeras med en test-builder samt en top-level method exempel som separat klass.
+
  */
 
 abstract class Utbytesobjekt<T : Utbytesobjekt<T>>(
