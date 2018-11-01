@@ -14,7 +14,10 @@ class LambdasTest {
         fun `last`() {
             assertThat(list.last()).isEqualTo("programming")
 
+            // it?
             assertThat(list.last({ it.length == 6 })).isEqualTo("Kotlin")
+            // samma som ovan men it är namnsatt till item
+            assertThat(list.last({ item -> item.length == 6 })).isEqualTo("Kotlin")
 
             // Om den sista parametern til en funktion är ett lambda
             // kan det flyttas ut ur paranteserna

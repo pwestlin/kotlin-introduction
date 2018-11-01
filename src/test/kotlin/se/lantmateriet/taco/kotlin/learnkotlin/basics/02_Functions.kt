@@ -30,6 +30,8 @@ class FunctionsTest {
         assertThat(square(3)).isEqualTo(9)
     }
 
+    // Som tumregel kan man ha att alltid sätta returtypen på en funktion på publika metoder?
+
     @Test
     fun `no return type`() {
         fun voidFunctionOrWhat() {

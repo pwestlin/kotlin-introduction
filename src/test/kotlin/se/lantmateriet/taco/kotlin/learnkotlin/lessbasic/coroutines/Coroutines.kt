@@ -9,6 +9,10 @@ import kotlin.system.measureTimeMillis
 
 class CoroutinesTest {
 
+
+    // Introduktion till coroutines: https://proandroiddev.com/async-operations-with-kotlin-coroutines-part-1-c51cc581ad33
+    // Bl.a. launch vs async: https://proandroiddev.com/coroutines-snags-6bf6fb53a3d1
+
     @Test
     fun `a bunch of threads`() {
         var counter = 0
