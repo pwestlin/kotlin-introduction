@@ -165,8 +165,8 @@ class LessBasicTest {
             assertThat(File(path)).doesNotExist()
 
             path
-                .let { File(it) }        // it = path
-                .also { it.mkdirs() }    // it = file
+                .let { File(it) }        // it = path (från variabel ovan)
+                .also { it.mkdirs() }    // it = file (från let ovan)
 
             assertThat(File(path)).exists()
         } finally {
