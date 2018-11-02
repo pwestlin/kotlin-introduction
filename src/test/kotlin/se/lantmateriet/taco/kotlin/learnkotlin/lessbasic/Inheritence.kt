@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.time.ZonedDateTime
 
 
 abstract class Parent(val name: String) {
@@ -101,5 +102,55 @@ class ObjektidentitetTest {
             assertThat(status).isEqualTo(fastighet1.status)
         }
 */
+    }
+}
+
+class InterfaceInheritanceTest {
+    interface Animal {
+        val noLegs: Int
+    }
+
+    data class Dog(val breed: String): Animal {
+        override val noLegs: Int
+            get() = 4
+    }
+
+    @Test
+    fun `create a dog`() {
+        with(Dog("Tibbe")) {
+            assertThat(breed).isEqualTo("Tibbe")
+            assertThat(noLegs).isEqualTo(4)
+        }
+    }
+
+    interface Utbytesobjekt {
+        val objektidentitet: String
+        val objektversion: Int
+        val versionGiltigFran: ZonedDateTime?
+        val versionGiltigTill: ZonedDateTime?
+    }
+
+    class PagaendeArende(
+        val arendeidentitet: String,
+        override val objektidentitet: String,
+        override val objektversion: Int = 1,
+        override val versionGiltigFran: ZonedDateTime? = null,
+        override val versionGiltigTill: ZonedDateTime? = null) : Utbytesobjekt
+
+    @Test
+    fun `create Pagaende arende`() {
+        val pagaendeArende = PagaendeArende(
+            objektidentitet = "sglehc+w",
+            objektversion = 3,
+            versionGiltigFran = ZonedDateTime.now(),
+            arendeidentitet = "abc123"
+        )
+        with(pagaendeArende) {
+            assertThat(objektidentitet).isEqualTo("sglehc+w")
+            assertThat(objektversion).isEqualTo(3)
+            assertThat(versionGiltigFran).isNotNull()
+            assertThat(versionGiltigTill).isNull()
+            assertThat(arendeidentitet).isEqualTo("abc123")
+        }
     }
 }
