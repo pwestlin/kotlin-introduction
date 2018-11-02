@@ -2,8 +2,8 @@
 
 package se.lantmateriet.taco.kotlin.learnkotlin.lessbasic
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 import kotlin.properties.Delegates
 
@@ -17,6 +17,9 @@ class DelegatedPropertiesTest {
             new != old && new.length > 3
         }
         var address: String by Delegates.notNull()
+        val roof: Boolean by lazy {
+            true
+        }
     }
 
     @Test
@@ -43,11 +46,16 @@ class DelegatedPropertiesTest {
     fun `change address of house`() {
         val house = House()
 
-        Assertions.assertThatThrownBy { house.address }
+        assertThatThrownBy { house.address }
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessage("Property address should be initialized before get.")
 
         house.address = "Lantmäterigatan, Gävle"
         assertThat(house.address).isEqualTo("Lantmäterigatan, Gävle")
+    }
+
+    @Test
+    fun `house has roof`() {
+        assertThat(House().roof).isTrue()
     }
 }

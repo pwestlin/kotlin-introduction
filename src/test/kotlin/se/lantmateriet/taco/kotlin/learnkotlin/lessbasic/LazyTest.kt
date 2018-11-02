@@ -1,5 +1,8 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 package se.lantmateriet.taco.kotlin.learnkotlin.lessbasic
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class LazyTest {
@@ -16,7 +19,7 @@ class LazyTest {
     fun `test lazy`() {
         val foo = Foo()
 
-        //assertThat(foo.bar).isEqualTo("baraboom")
+        assertThat(foo.bar).isEqualTo("baraboom")
     }
 }
 

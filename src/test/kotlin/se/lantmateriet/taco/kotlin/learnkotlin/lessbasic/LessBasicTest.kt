@@ -1,8 +1,7 @@
-@file:Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall", "LiftReturnOrAssignment", "ReplaceGetOrSet", "NonAsciiCharacters", "PackageName", "ClassName")
+@file:Suppress("UNUSED_VARIABLE", "UNUSED_VALUE", "RedundantExplicitType", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "VARIABLE_WITH_REDUNDANT_INITIALIZER", "ALWAYS_NULL", "UNNECESSARY_SAFE_CALL", "EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate", "SimplifyBooleanWithConstants", "ConstantConditionIf", "MoveLambdaOutsideParentheses", "UnnecessaryVariable", "unused", "UNUSED_PARAMETER", "RemoveRedundantBackticks", "NullChecksToSafeCall", "LiftReturnOrAssignment", "ReplaceGetOrSet", "NonAsciiCharacters", "PackageName", "ClassName", "UNUSED_EXPRESSION", "UnusedEquals", "ReplaceSingleLineLet")
 
 package se.lantmateriet.taco.kotlin.learnkotlin.lessbasic
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -58,8 +57,6 @@ class LessBasicTest {
     }
 
     // infix verkar bäst för tester
-
-
 
 
     /*
@@ -118,6 +115,12 @@ class LessBasicTest {
     fun let() {
         class Foo(arg: String)
 
+        // let returnerar det sista "uttrycket" inom {}
+        assertThat(Foo("foo").let {
+            true
+            false
+        }).isFalse()
+
         val let = Foo("Bar").let { foo ->
             foo.toString()
 
@@ -127,7 +130,48 @@ class LessBasicTest {
 
             foo == Foo("Bra")
         }
-        Assertions.assertThat(let).isFalse()
+        assertThat(let).isFalse()
+
+    }
+
+    @Test
+    fun also() {
+        class Foo(arg: String)
+
+        val foo = Foo("foo")
+
+        // also returnerar "this", dvs foo i fallet nedan
+        assertThat(foo.also {
+            true
+            false
+        }).isEqualTo(foo)
+
+        assertThat(
+            foo.also {
+                foo.toString()
+
+                // Do some stuff
+                // Do more stuff
+                // Do some more stuff
+
+                foo == Foo("Bra")
+            }).isEqualTo(foo)
+    }
+
+    @Test
+    fun `combine let and also to create a dir`() {
+        val path = System.getProperty("java.io.tmpdir") + "/foo/bar/foobar"
+        try {
+            assertThat(File(path)).doesNotExist()
+
+            path
+                .let { File(it) }        // it = path
+                .also { it.mkdirs() }    // it = file
+
+            assertThat(File(path)).exists()
+        } finally {
+            File(path).delete()
+        }
     }
 
     @Test
@@ -155,7 +199,7 @@ class LessBasicTest {
     }
 
 
-    fun measureTimeInMilliSeconds(block: () -> Unit) : Long {
+    fun measureTimeInMilliSeconds(block: () -> Unit): Long {
         val start = System.currentTimeMillis()
         block()
         return System.currentTimeMillis() - start
