@@ -10,6 +10,7 @@ class RangesTest {
     @Test
     fun range() {
         assertThat(IntRange(2, 4)).containsExactly(2, 3, 4)
+        assertThat((2..4)).containsExactly(2, 3, 4)
         assertThat(CharRange('b', 'd')).containsExactly('b', 'c', 'd')
 
         // Kommer inte funka för å, ä, ö ligger

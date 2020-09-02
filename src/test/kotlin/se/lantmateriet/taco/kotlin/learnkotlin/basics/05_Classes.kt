@@ -28,7 +28,7 @@ class ClassesTest {
     fun inheritance() {
         // Klasser är final by default som man måste märka dem med "open" vid arv
         open class Animal(val noLegs: Int) {
-            // Metoder är också final by default
+            // Funktioner är också final by default
             open fun sound() = "Schhh"
         }
 

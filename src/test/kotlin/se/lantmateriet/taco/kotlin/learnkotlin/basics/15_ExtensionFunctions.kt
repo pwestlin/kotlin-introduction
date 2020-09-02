@@ -19,7 +19,10 @@ class ExtensionFunctionsTest {
         fun String.reverseAndToUpperCase() = this.reversed().toUpperCase()
         assertThat(string.reverseAndToUpperCase()).isEqualTo("OOF")
 
+        class Person(val first: String, val last: String)
     }
+
+
 
 
     // Ni vet den där klassen StringUtils eller DateUtils som man ALLTID har i VARJE projekt?

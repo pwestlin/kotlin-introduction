@@ -17,7 +17,7 @@ class WhenTest {
 
         val string =
             when (obj) {
-                1 -> "One"
+                1,2,3 -> "Number"
                 "Hello" -> "Greeting"
                 is Long -> "Long"
                 !is String -> "Not a string"

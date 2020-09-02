@@ -3,6 +3,7 @@
 package se.lantmateriet.taco.kotlin.learnkotlin.basics
 
 // main
+@Suppress("UNUSED_PARAMETER")
 fun main(args: Array<String>) {
     println("Hello, Wisconsin!")
 }

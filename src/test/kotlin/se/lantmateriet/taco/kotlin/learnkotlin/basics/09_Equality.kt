@@ -9,7 +9,7 @@ class EqualityTest {
 
     @Test
     fun `equality Checks`() {
-        data class Car(val brand: String, val model: String, val year: String)
+        data class Car(val brand: String, val model: String, var year: String)
 
         val car = Car("Volvo", "PV", "1970")
 
@@ -22,6 +22,7 @@ class EqualityTest {
         assertThat(notEqualCar === car).isFalse()
 
         val sameCar = car
+        car.year = "34"
         assertThat(sameCar == car).isTrue()
         assertThat(sameCar === car).isTrue()
 

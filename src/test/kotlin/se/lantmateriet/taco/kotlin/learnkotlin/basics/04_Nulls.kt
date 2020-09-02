@@ -11,12 +11,16 @@ class NullsTest {
 
     @Test
     fun nulls() {
+        fun returnNull(): String? {
+            return null
+        }
+
         var string: String = "a"
         //string = null     // Kompileringsfel för var string får inte vara null
 
         // Notera ? efter String
         var nullableString: String? = "b"
-        nullableString = null
+        nullableString = returnNull()
 
         assertThatThrownBy { nullableString!!.length }
             .isInstanceOf(KotlinNullPointerException::class.java)
@@ -54,7 +58,7 @@ class NullsTest {
         assertThat(getCustomerStreetAddress(Customer(2, Person(Address())))).isNull()
         assertThat(getCustomerStreetAddress(Customer(3, Person(Address("Lantmäterigatan"))))).isEqualTo("Lantmäterigatan")
 
-        //return customer?.person?.address?.street
+        //return customer?.person?.address?.street ?: "df,gses"
 
         val files = File("/asfgsdhd/cvhndf/jmfghjern").listFiles()    // listFiles() returnerar null om inte pathen kan hittas
         assertThat(files).isNull()
@@ -71,14 +75,16 @@ class NullsTest {
         var value: String? = null
         value?.let {
             println("Inte null")    // Denna rad kommer aldrig exekveras då value är null
+            print("value = $it")
         }
+
 
         value = "foo"
         value?.let {
             println("Inte null")
         }
 
-        /* let är alltså samma sak som:
+        /* ?.let är alltså samma sak som:
         if(value != null) {
             println("Inte null")
         }

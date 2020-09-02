@@ -17,7 +17,7 @@ class LambdasTest {
             // it?
             assertThat(list.last({ it.length == 6 })).isEqualTo("Kotlin")
             // samma som ovan men it är namnsatt till item
-            assertThat(list.last({ item -> item.length == 6 })).isEqualTo("Kotlin")
+            assertThat(list.last({ word -> word.length == 6 })).isEqualTo("Kotlin")
 
             // Om den sista parametern til en funktion är ett lambda
             // kan det flyttas ut ur paranteserna

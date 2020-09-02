@@ -41,7 +41,6 @@ class CollectionsTest {
             "apple" in fruits -> println("apple is fine too")
             else -> println("whatever")
         }
-
     }
 
     @Test
@@ -72,7 +71,7 @@ class CollectionsTest {
     @Test
     fun `filter`() {
         val fruitsWithA = fruits            // Inget anrop till stream()
-            .filter { it.startsWith("a") }      // "it" är default-namnet för en ensam parameter i strömmar
+            .filter { it.startsWith("a") }      // "it" är default-namnet för en ensam parameter i lambdas
         // Inget anrop till .collect(Collectors.toList())
         assertThat(fruitsWithA).containsExactlyInAnyOrder("avocado", "apple")
     }
@@ -81,7 +80,7 @@ class CollectionsTest {
     fun `map`() {
         val fruitsWithA = fruits            // Inget anrop till stream()
             //.filter { s -> s.startsWith("a") }
-            .filter { it.startsWith("a") }      // "it" är default-namnet för en ensam parameter i strömmar
+            .filter { it.startsWith("a") }      // "it" är default-namnet för en ensam parameter i lambdas
             .sortedBy { it }
             .map { it.toUpperCase() }
         // Inget anrop till .collect(Collectors.toList())
